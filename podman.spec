@@ -1,3 +1,7 @@
+# --- compatibility for rpm < 4.19 on Ubuntu 24.04 -----------------
+%{!?ldconfig_scriptlets:%global ldconfig_scriptlets() \
+%{expand:%post -p /sbin/ldconfig\n%postun -p /sbin/ldconfig}}
+
 %if "%{_vendor}" == "debbuild"
 %define go_bin go
 
@@ -83,7 +87,6 @@ BuildRequires: pkg-config
 BuildRequires: golang
 BuildRequires: libc6
 BuildRequires: gettext-base
-BuildRequires: rpm >= 4.19
 Requires: conmon >= 2:2.0.30
 Requires: containers-common >= 4:1
 Requires: uidmap
