@@ -1,6 +1,4 @@
-# --- compatibility for rpm < 4.19 on Ubuntu 24.04 -----------------
-%{!?ldconfig_scriptlets:%global ldconfig_scriptlets() \
-%{expand:%post -p /sbin/ldconfig\n%postun -p /sbin/ldconfig}}
+%%{!?ldconfig_scriptlets:%global ldconfig_scriptlets() %nil}
 
 %if "%{_vendor}" == "debbuild"
 %define go_bin go
