@@ -90,8 +90,9 @@ BuildRequires: pkg-config
 BuildRequires: golang-1.23-go
 BuildRequires: libc6
 BuildRequires: gettext-base
-Requires: conmon >= 2:2.0.30
-Requires: containers-common >= 4:1
+Requires: conmon #>= 2.1.10
+Requires: golang-github-containers-common # >= 0.57.4
+Requires: gvproxy
 Requires: uidmap
 %endif
 Recommends: %{name}-gvproxy = %{epoch}:%{version}-%{release}
