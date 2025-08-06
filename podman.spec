@@ -91,7 +91,7 @@ BuildRequires: golang-1.23-go
 BuildRequires: libc6
 BuildRequires: gettext-base
 Requires: conmon
-Requires: containers-common
+Requires: golang-github-containers-common
 Requires: podman-gvproxy
 Requires: uidmap
 %endif
