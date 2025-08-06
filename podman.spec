@@ -2,8 +2,8 @@
 
 %if "%{_vendor}" == "debbuild"
 #%define go_bin go
-%define go_bin /usr/lib/go-1.22/bin/go
-%global go_bin /usr/lib/go-1.22/bin/go
+%define go_bin /usr/lib/go-1.23/bin/go
+%global go_bin /usr/lib/go-1.23/bin/go
 
 %global _unitdir %{_usr}/lib/systemd/system
 %global _userunitdir %{_usr}/lib/systemd/user
@@ -87,7 +87,7 @@ BuildRequires: libgpgme-dev
 BuildRequires: libseccomp-dev
 BuildRequires: libsystemd-dev
 BuildRequires: pkg-config
-BuildRequires: golang-1.22-go
+BuildRequires: golang-1.23-go
 BuildRequires: libc6
 BuildRequires: gettext-base
 Requires: conmon >= 2:2.0.30
@@ -199,7 +199,7 @@ tar zxf %{SOURCE3}
 export GOEXPERIMENT=rangefunc
 export BUILDTAGS="goexperiment.rangefunc ${BUILDTAGS:-}"
 
-export PATH=/usr/lib/go-1.22/bin:$PATH
+export PATH=/usr/lib/go-1.23/bin:$PATH
 
 export GOFLAGS='-p=2'
 export GO111MODULE=off
