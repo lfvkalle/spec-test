@@ -190,6 +190,7 @@ tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
 
 %build
+export GOFLAGS='-p=2'
 export GO111MODULE=off
 export GOPATH=$(pwd)/_build:$(pwd)
 
