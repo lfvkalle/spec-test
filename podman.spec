@@ -63,7 +63,7 @@ Epoch: 4
 Version: %{built_tag_strip}
 Packager: Podman Debbuild Maintainers <https://github.com/orgs/containers/teams/podman-debbuild-maintainers>
 License: Apache-2.0 and BSD-2-Clause and BSD-3-Clause and ISC and MIT and MPL-2.0
-Release: 9000~joelpurra+%{?dist}
+Release: 8000~lfv+%{?dist}
 Summary: Manage Pods, Containers and Container Images
 URL: https://%{name}.io/
 Source0: %{git0}/archive/v%{built_tag_strip}.tar.gz
