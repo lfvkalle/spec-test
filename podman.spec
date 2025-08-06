@@ -2,6 +2,7 @@
 
 %if "%{_vendor}" == "debbuild"
 %define go_bin go
+%undefine _hardened_build
 
 %global _unitdir %{_usr}/lib/systemd/system
 %global _userunitdir %{_usr}/lib/systemd/user
@@ -188,8 +189,10 @@ tar zxf %{SOURCE1}
 # download all versions in use; revert when only downloading a single version.
 tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
+export DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie"
 
 %build
+export DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie"
 export GOEXPERIMENT=rangefunc
 export BUILDTAGS="goexperiment.rangefunc ${BUILDTAGS:-}"
 
@@ -208,20 +211,20 @@ ln -s vendor src
 LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
 
 # build rootlessport first
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/rootlessport %{import_path}/cmd/rootlessport
+GO111MODULE=off go build -tags="${BUILDTAGS:-}" -a -v -x -o bin/rootlessport %{import_path}/cmd/rootlessport
 
 # build %%{name}
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh)"
 
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name} %{import_path}/cmd/%{name}
+GO111MODULE=off go build -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper exclude_graphdriver_btrfs btrfs_noversion $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh) remote"
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name}-remote %{import_path}/cmd/%{name}
+GO111MODULE=off go build -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 # build quadlet
 export BUILDTAGS="$BASEBUILDTAGS $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh)"
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/quadlet %{import_path}/cmd/quadlet
+GO111MODULE=off go build -tags="${BUILDTAGS:-}" -a -v -x -o bin/quadlet %{import_path}/cmd/quadlet
 
 cd %{repo_plugins}-%{commit_plugins}
 mkdir _build
@@ -231,7 +234,7 @@ ln -s ../../../../ src/%{import_path_plugins}
 cd ..
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
+GO111MODULE=off go build -tags="${BUILDTAGS:-}" -a -v -x -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
 cd ..
 
 cd %{repo_gvproxy}-%{commit_gvproxy}
@@ -242,7 +245,7 @@ ln -s ../../../../ src/%{import_path_gvproxy}
 cd ..
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/gvproxy %{import_path_gvproxy}/cmd/gvproxy
+GO111MODULE=off go build -tags="${BUILDTAGS:-}" -a -v -x -o bin/gvproxy %{import_path_gvproxy}/cmd/gvproxy
 cd ..
 
 export GO111MODULE=auto
