@@ -1,17 +1,21 @@
 %%{!?ldconfig_scriptlets:%global ldconfig_scriptlets() %nil}
 
 %if "%{_vendor}" == "debbuild"
-%define go_bin go
+#%define go_bin go
+%define go_bin /usr/lib/go-1.22/bin/go
+%global go_bin /usr/lib/go-1.22/bin/go
 
 %global _unitdir %{_usr}/lib/systemd/system
 %global _userunitdir %{_usr}/lib/systemd/user
 %global _tmpfilesdir %{_usr}/lib/tmpfiles.d
 %global _systemdgeneratordir %{_prefix}/lib/systemd/system-generators
 %global _systemdusergeneratordir %{_prefix}/lib/systemd/user-generators
-%define gobuild(o:) GO111MODULE=off go build -buildmode pie -tags=" ${BUILDTAGS:-}" -a -v -x %{?**};
+#%define gobuild(o:) GO111MODULE=off go build -buildmode pie -tags=" ${BUILDTAGS:-}" -a -v -x %{?**};
+%define gobuild(o:) GO111MODULE=off %{go_bin} build -buildmode pie -tags=" ${BUILDTAGS:-}" -a -v -x %{?**};
 %endif
 
 %global with_debug 1
+
 
 %if 0%{?with_debug}
 %global _find_debuginfo_dwz_opts %{nil}
