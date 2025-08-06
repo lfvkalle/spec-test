@@ -196,8 +196,6 @@ tar zxf %{SOURCE3}
 
 %build
 export PATH=/usr/lib/go-1.22/bin:$PATH
-export GOEXPERIMENT=rangefunc
-export BUILDTAGS="goexperiment.rangefunc ${BUILDTAGS:-}"
 
 export GOFLAGS='-p=2'
 export GO111MODULE=off
@@ -212,22 +210,26 @@ ln -s vendor src
 
 # build date. FIXME: Makefile uses '/v2/libpod', that doesn't work here?
 LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
+LDFLAGS_PODMAN="-X %{import_path}/libpod/define.buildInfo=$(date +%s) -linkmode=external -buildid= -s -w"
 
 # build rootlessport first
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/rootlessport %{import_path}/cmd/rootlessport
+GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLAGS_PODMAN}" -a -v -x -o bin/rootlessport %{import_path}/cmd/rootlessport
 
 # build %%{name}
+
+
+
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh)"
 
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name} %{import_path}/cmd/%{name}
+GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLAGS_PODMAN}" -a -v -x -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper exclude_graphdriver_btrfs btrfs_noversion $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh) remote"
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name}-remote %{import_path}/cmd/%{name}
+GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLAGS_PODMAN}" -a -v -x -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 # build quadlet
 export BUILDTAGS="$BASEBUILDTAGS $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh)"
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/quadlet %{import_path}/cmd/quadlet
+GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLAGS_PODMAN}" -a -v -x -o bin/quadlet %{import_path}/cmd/quadlet
 
 cd %{repo_plugins}-%{commit_plugins}
 mkdir _build
