@@ -195,6 +195,10 @@ tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
 
 %build
+
+export GOEXPERIMENT=rangefunc
+export BUILDTAGS="goexperiment.rangefunc ${BUILDTAGS:-}"
+
 export PATH=/usr/lib/go-1.22/bin:$PATH
 
 export GOFLAGS='-p=2'
@@ -216,8 +220,6 @@ LDFLAGS_PODMAN="-X %{import_path}/libpod/define.buildInfo=$(date +%s) -linkmode=
 GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLAGS_PODMAN}" -a -v -x -o bin/rootlessport %{import_path}/cmd/rootlessport
 
 # build %%{name}
-
-
 
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh)"
 
