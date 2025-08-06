@@ -2,7 +2,6 @@
 
 %if "%{_vendor}" == "debbuild"
 %define go_bin go
-%undefine _hardened_build
 
 %global _unitdir %{_usr}/lib/systemd/system
 %global _userunitdir %{_usr}/lib/systemd/user
@@ -10,6 +9,8 @@
 %global _systemdgeneratordir %{_prefix}/lib/systemd/system-generators
 %global _systemdusergeneratordir %{_prefix}/lib/systemd/user-generators
 %define gobuild(o:) GO111MODULE=off go build -buildmode pie -tags=" ${BUILDTAGS:-}" -a -v -x %{?**};
+%undefine gobuild
+%define gobuild(o:) GO111MODULE=off go build -tags=" ${BUILDTAGS:-}" -a -v -x %{?**};
 %endif
 
 %global with_debug 1
@@ -189,10 +190,8 @@ tar zxf %{SOURCE1}
 # download all versions in use; revert when only downloading a single version.
 tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
-export DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie"
 
 %build
-export DEB_BUILD_MAINT_OPTIONS="hardening=+all,-pie"
 export GOEXPERIMENT=rangefunc
 export BUILDTAGS="goexperiment.rangefunc ${BUILDTAGS:-}"
 
