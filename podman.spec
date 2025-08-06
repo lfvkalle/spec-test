@@ -90,8 +90,8 @@ BuildRequires: pkg-config
 BuildRequires: golang-1.23-go
 BuildRequires: libc6
 BuildRequires: gettext-base
-Requires: conmon #>= 2.1.10
-Requires: containers-common # >= 0.57.4
+Requires: conmon
+Requires: containers-common
 Requires: podman-gvproxy
 Requires: uidmap
 %endif
