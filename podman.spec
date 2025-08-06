@@ -78,6 +78,7 @@ Requires: catatonit
 Requires: iptables
 Requires: nftables
 %if "%{_vendor}" == "debbuild"
+BuildRequires: libsqlite3-dev
 BuildRequires: git
 BuildRequires: libassuan-dev
 BuildRequires: libglib2.0-dev
