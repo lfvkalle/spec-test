@@ -190,6 +190,7 @@ tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
 
 %build
+export PATH=/usr/lib/go-1.22/bin:$PATH
 export GOEXPERIMENT=rangefunc
 export BUILDTAGS="goexperiment.rangefunc ${BUILDTAGS:-}"
 
