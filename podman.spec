@@ -1,5 +1,3 @@
-%%{!?ldconfig_scriptlets:%global ldconfig_scriptlets() %nil}
-
 %if "%{_vendor}" == "debbuild"
 %define go_bin go
 
@@ -178,7 +176,7 @@ gvisor-tap-vsock brings a configurable DNS server and
 dynamic port forwarding.
 
 %prep
-%autosetup -n %{name}-%{built_tag_strip}
+%autosetup -Sgit -n %{name}-%{built_tag_strip}
 sed -i 's;@@PODMAN@@\;$(BINDIR);@@PODMAN@@\;%{_bindir};' Makefile
 
 # untar dnsname
@@ -190,7 +188,6 @@ tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
 
 %build
-export GOFLAGS='-p=2'
 export GO111MODULE=off
 export GOPATH=$(pwd)/_build:$(pwd)
 
@@ -205,20 +202,20 @@ ln -s vendor src
 LDFLAGS="-X %{import_path}/libpod/define.buildInfo=$(date +%s)"
 
 # build rootlessport first
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/rootlessport %{import_path}/cmd/rootlessport
+%gobuild -o bin/rootlessport %{import_path}/cmd/rootlessport
 
 # build %%{name}
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh)"
 
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name} %{import_path}/cmd/%{name}
+%gobuild -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
 export BUILDTAGS="seccomp exclude_graphdriver_devicemapper exclude_graphdriver_btrfs btrfs_noversion $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh) remote"
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/%{name}-remote %{import_path}/cmd/%{name}
+%gobuild -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 # build quadlet
 export BUILDTAGS="$BASEBUILDTAGS $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh)"
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/quadlet %{import_path}/cmd/quadlet
+%gobuild -o bin/quadlet %{import_path}/cmd/quadlet
 
 cd %{repo_plugins}-%{commit_plugins}
 mkdir _build
@@ -228,7 +225,7 @@ ln -s ../../../../ src/%{import_path_plugins}
 cd ..
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
+%gobuild -o bin/dnsname %{import_path_plugins}/plugins/meta/dnsname
 cd ..
 
 cd %{repo_gvproxy}-%{commit_gvproxy}
@@ -239,7 +236,7 @@ ln -s ../../../../ src/%{import_path_gvproxy}
 cd ..
 ln -s vendor src
 export GOPATH=$(pwd)/_build:$(pwd)
-GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -a -v -x -o bin/gvproxy %{import_path_gvproxy}/cmd/gvproxy
+%gobuild -o bin/gvproxy %{import_path_gvproxy}/cmd/gvproxy
 cd ..
 
 export GO111MODULE=auto
