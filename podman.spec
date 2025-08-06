@@ -261,6 +261,9 @@ export GO111MODULE=auto
 %{__make} docs docker-docs
 
 %install
+# Disable Go’s automatic toolchain download (needs Internet)
+export GOTOOLCHAIN=local
+# Set custom path
 export PATH=/usr/lib/go-1.23/bin:$PATH
 install -dp %{buildroot}%{_unitdir}
 PODMAN_VERSION=%{version} %{__make} PREFIX=%{buildroot}%{_prefix} ETCDIR=%{buildroot}%{_sysconfdir} \
