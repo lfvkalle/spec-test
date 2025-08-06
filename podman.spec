@@ -82,7 +82,7 @@ BuildRequires: libgpgme-dev
 BuildRequires: libseccomp-dev
 BuildRequires: libsystemd-dev
 BuildRequires: pkg-config
-BuildRequires: golang
+BuildRequires: golang-1.22-go
 BuildRequires: libc6
 BuildRequires: gettext-base
 Requires: conmon >= 2:2.0.30
