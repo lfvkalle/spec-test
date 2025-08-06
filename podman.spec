@@ -221,12 +221,12 @@ GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLA
 
 # build %%{name}
 
-export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh) $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh)"
+export BUILDTAGS="seccomp exclude_graphdriver_devicemapper $(hack/btrfs_installed_tag.sh) $(hack/btrfs_tag.sh) $(hack/libdm_tag.sh)  $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh)"
 
 GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLAGS_PODMAN}" -a -v -x -o bin/%{name} %{import_path}/cmd/%{name}
 
 # build %%{name}-remote
-export BUILDTAGS="seccomp exclude_graphdriver_devicemapper exclude_graphdriver_btrfs btrfs_noversion $(hack/selinux_tag.sh) $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh) remote"
+export BUILDTAGS="seccomp exclude_graphdriver_devicemapper exclude_graphdriver_btrfs btrfs_noversion  $(hack/systemd_tag.sh) $(hack/libsubid_tag.sh) remote"
 GO111MODULE=off go build -buildmode=pie -tags="${BUILDTAGS:-}" -ldflags "${LDFLAGS_PODMAN}" -a -v -x -o bin/%{name}-remote %{import_path}/cmd/%{name}
 
 # build quadlet
