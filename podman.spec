@@ -195,6 +195,8 @@ tar zxf %{SOURCE2}
 tar zxf %{SOURCE3}
 
 %build
+# Disable Go’s automatic toolchain download (needs Internet)
+export GOTOOLCHAIN=local
 
 export GOEXPERIMENT=rangefunc
 export BUILDTAGS="goexperiment.rangefunc ${BUILDTAGS:-}"
