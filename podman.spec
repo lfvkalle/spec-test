@@ -10,7 +10,6 @@
 %global _tmpfilesdir %{_usr}/lib/tmpfiles.d
 %global _systemdgeneratordir %{_prefix}/lib/systemd/system-generators
 %global _systemdusergeneratordir %{_prefix}/lib/systemd/user-generators
-#%define gobuild(o:) GO111MODULE=off go build -buildmode pie -tags=" ${BUILDTAGS:-}" -a -v -x %{?**};
 %define gobuild(o:) GO111MODULE=off %{go_bin} build -buildmode pie -tags=" ${BUILDTAGS:-}" -a -v -x %{?**};
 %endif
 
